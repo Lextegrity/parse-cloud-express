@@ -72,7 +72,7 @@ function inflateParseUser(req, res, next) {
 
 var successResponse = function(res, data) {
   data = data || true;
-  res.status(200).send({ "success" : data });
+  res.status(200).send({ "success" : Parse._encode(data) });
 }
 
 var errorResponse = function(res, message) {
