@@ -119,7 +119,7 @@ var define = function(functionName, handler) {
 
 var httpRequest = function(options) {
   var promise = new Parse.Promise();
-  if (typeof options.body == 'Object') {
+  if (typeof options.body == 'object') {
     options.json = true;
   }
   Request(options, function(error, response, body) {
