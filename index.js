@@ -51,6 +51,12 @@ function addParseResponseMethods(req, res, next) {
   next();
 }
 
+function successResponseEncodesObject(req, res, next) {
+  res.success = function(data) {
+    successResponse(res, Parse._encode(data));
+  }
+}
+
 // Middleware to promote the cloud function params to the request object
 function updateRequestFunctionParams(req, res, next) {
   req.params = req.body.params;
@@ -72,7 +78,7 @@ function inflateParseUser(req, res, next) {
 
 var successResponse = function(res, data) {
   data = data || true;
-  res.status(200).send({ "success" : Parse._encode(data) });
+  res.status(200).send({ "success" : data });
 }
 
 var errorResponse = function(res, message) {
@@ -113,7 +119,7 @@ var afterDelete = function(className, handler) {
 }
 
 var define = function(functionName, handler) {
-  app.post('/function_' + functionName, updateRequestFunctionParams, addParseResponseMethods, inflateParseUser, handler);
+  app.post('/function_' + functionName, updateRequestFunctionParams, addParseResponseMethods, successResponseEncodesObject, inflateParseUser, handler);
   Routes['function'].push(functionName);
 };
 
