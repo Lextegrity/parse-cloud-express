@@ -119,6 +119,9 @@ var define = function(functionName, handler) {
 
 var httpRequest = function(options) {
   var promise = new Parse.Promise();
+  if (typeof options.body == 'Object') {
+    options.json = true;
+  }
   Request(options, function(error, response, body) {
     if (error) {
       console.log('Parse.Cloud.httpRequest failed with error:');
