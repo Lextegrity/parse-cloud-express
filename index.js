@@ -118,10 +118,11 @@ var beforeSave = function(className, handler) {
         res.success = function() {
           var response = {};
           var dirtyKeys = req.object.dirtyKeys();
+          var jsonObject = req.object.toJSON();
           if (dirtyKeys && dirtyKeys.length > 0) {
             console.log('Found dirty keys ' + dirtyKeys.length);
             for (var i = 0; i < dirtyKeys.length; i++) {
-              response[dirtyKeys[i]] = req.object.get(dirtyKeys[i]);
+              response[dirtyKeys[i]] = jsonObject[dirtyKeys[i]];
             }
           }
           originalSuccess(response);
