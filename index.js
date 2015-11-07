@@ -91,6 +91,13 @@ var emptyResponse = function(req, res, next) {
   next();
 };
 
+var entryLogger = function(className, actionType) {
+  return function(req, res, next) {
+    console.log('Entering ' + actionType + ' for ' + className);
+    next();
+  }
+}
+
 var app = express();
 var jsonParser = bodyParser.json();
 
@@ -99,27 +106,55 @@ app.use(validateWebhookRequest);
 app.use(jsonParser);
 
 var beforeSave = function(className, handler) {
-  app.post('/beforeSave_' + className, addParseResponseMethods, inflateParseObject, inflateParseUser, handler);
+  app.post('/beforeSave_' + className,
+      entryLogger(className, 'beforeSave'),
+      addParseResponseMethods,
+      inflateParseObject,
+      inflateParseUser,
+      handler);
   Routes['beforeSave'].push(className);
 };
 
 var afterSave = function(className, handler) {
-  app.post('/afterSave_' + className, addParseResponseMethods, inflateParseObject, inflateParseUser, emptyResponse, handler);
+  app.post('/afterSave_' + className,
+      entryLogger(className, 'afterSave'),
+      addParseResponseMethods,
+      inflateParseObject,
+      inflateParseUser,
+      emptyResponse,
+      handler);
   Routes['afterSave'].push(className);
 };
 
 var beforeDelete = function(className, handler) {
-  app.post('/beforeDelete_' + className, addParseResponseMethods, inflateParseObject, inflateParseUser, handler);
+  app.post('/beforeDelete_' + className,
+      entryLogger(className, 'beforeDelete'),
+      addParseResponseMethods,
+      inflateParseObject,
+      inflateParseUser,
+      handler);
   Routes['beforeDelete'].push(className);
 }
 
 var afterDelete = function(className, handler) {
-  app.post('/afterDelete_' + className, addParseResponseMethods, inflateParseObject, inflateParseUser, emptyResponse, handler);
+  app.post('/afterDelete_' + className,
+      entryLogger(className, 'afterDelete'),
+      addParseResponseMethods,
+      inflateParseObject,
+      inflateParseUser,
+      emptyResponse,
+      handler);
   Routes['afterDelete'].push(className);
 }
 
 var define = function(functionName, handler) {
-  app.post('/function_' + functionName, updateRequestFunctionParams, addParseResponseMethods, successResponseEncodesObject, inflateParseUser, handler);
+  app.post('/function_' + functionName,
+      entryLogger(functionName, 'function'),
+      updateRequestFunctionParams,
+      addParseResponseMethods,
+      successResponseEncodesObject,
+      inflateParseUser,
+      handler);
   Routes['function'].push(functionName);
 };
 
