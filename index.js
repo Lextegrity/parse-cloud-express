@@ -112,7 +112,6 @@ var beforeSave = function(className, handler) {
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
-      encodeSuccessResponseObject,
       handler);
   Routes['beforeSave'].push(className);
 };
@@ -124,7 +123,6 @@ var afterSave = function(className, handler) {
       inflateParseObject,
       inflateParseUser,
       emptyResponse,
-      encodeSuccessResponseObject,
       handler);
   Routes['afterSave'].push(className);
 };
@@ -135,7 +133,6 @@ var beforeDelete = function(className, handler) {
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
-      encodeSuccessResponseObject,
       handler);
   Routes['beforeDelete'].push(className);
 }
@@ -147,7 +144,6 @@ var afterDelete = function(className, handler) {
       inflateParseObject,
       inflateParseUser,
       emptyResponse,
-      encodeSuccessResponseObject,
       handler);
   Routes['afterDelete'].push(className);
 }
