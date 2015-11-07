@@ -51,7 +51,7 @@ function addParseResponseMethods(req, res, next) {
   next();
 }
 
-function successResponseEncodesObject(req, res, next) {
+function encodeSuccessResponseObject(req, res, next) {
   res.success = function(data) {
     successResponse(res, Parse._encode(data));
   }
@@ -112,6 +112,7 @@ var beforeSave = function(className, handler) {
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
+      encodeSuccessResponseObject,
       handler);
   Routes['beforeSave'].push(className);
 };
@@ -123,6 +124,7 @@ var afterSave = function(className, handler) {
       inflateParseObject,
       inflateParseUser,
       emptyResponse,
+      encodeSuccessResponseObject,
       handler);
   Routes['afterSave'].push(className);
 };
@@ -133,6 +135,7 @@ var beforeDelete = function(className, handler) {
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
+      encodeSuccessResponseObject,
       handler);
   Routes['beforeDelete'].push(className);
 }
@@ -144,6 +147,7 @@ var afterDelete = function(className, handler) {
       inflateParseObject,
       inflateParseUser,
       emptyResponse,
+      encodeSuccessResponseObject,
       handler);
   Routes['afterDelete'].push(className);
 }
@@ -153,7 +157,7 @@ var define = function(functionName, handler) {
       entryLogger(functionName, 'function'),
       updateRequestFunctionParams,
       addParseResponseMethods,
-      successResponseEncodesObject,
+      encodeSuccessResponseObject,
       inflateParseUser,
       handler);
   Routes['function'].push(functionName);
