@@ -52,8 +52,9 @@ function addParseResponseMethods(req, res, next) {
 }
 
 function encodeSuccessResponseObject(req, res, next) {
+  var originalSuccess = res.success;
   res.success = function(data) {
-    successResponse(res, Parse._encode(data));
+    originalSuccess(Parse._encode(data));
   }
   next();
 }
@@ -112,6 +113,20 @@ var beforeSave = function(className, handler) {
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
+      function beforeSaveResponseMojo(req, res, next) {
+        var originalSuccess = res.success;
+        res.success = function() {
+          var response = {};
+          var dirtyKeys = res.object.dirtyKeys();
+          if (dirtyKeys && dirtyKeys.length > 0) {
+            for (var i = 0; i < dirtyKeys.length; i++) {
+              response[dirtyKeys[i]] = res.object.get(dirtyKeys[i]);
+            }
+          }
+          originalSuccess(response);
+        }
+        next();
+      },
       handler);
   Routes['beforeSave'].push(className);
 };
