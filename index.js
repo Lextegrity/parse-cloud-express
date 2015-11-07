@@ -117,10 +117,11 @@ var beforeSave = function(className, handler) {
         var originalSuccess = res.success;
         res.success = function() {
           var response = {};
-          var dirtyKeys = res.object.dirtyKeys();
+          var dirtyKeys = req.object.dirtyKeys();
           if (dirtyKeys && dirtyKeys.length > 0) {
+            console.log('Found dirty keys ' + dirtyKeys.length);
             for (var i = 0; i < dirtyKeys.length; i++) {
-              response[dirtyKeys[i]] = res.object.get(dirtyKeys[i]);
+              response[dirtyKeys[i]] = req.object.get(dirtyKeys[i]);
             }
           }
           originalSuccess(response);
