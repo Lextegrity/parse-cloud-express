@@ -55,6 +55,7 @@ function successResponseEncodesObject(req, res, next) {
   res.success = function(data) {
     successResponse(res, Parse._encode(data));
   }
+  next();
 }
 
 // Middleware to promote the cloud function params to the request object
