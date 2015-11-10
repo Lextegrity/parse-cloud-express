@@ -115,12 +115,9 @@ var beforeSave = function(className, handler) {
       inflateParseUser,
       function beforeSaveResponseMojo(req, res, next) {
         var originalSuccess = res.success;
-        res.success = function(data) {
-          var response = data || {};
-          var dirtyKeys = req.object.dirtyKeys();
+        res.success = function() {
           var jsonObject = req.object.toJSON();
-          originalSuccess((dirtyKeys && dirtyKeys.length) ?
-              jsonObject : response);
+          originalSuccess(jsonObject);
         }
         next();
       },
