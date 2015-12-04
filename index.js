@@ -34,6 +34,7 @@ function validateWebhookRequest(req, res, next) {
 // Middleware to inflate a Parse.Object passed to a webhook route
 function inflateParseObject(req, res, next) {
   var object = req.body.object;
+  console.log(object);
   req.object = Parse.Object.fromJSON(object);
   next();
 }
