@@ -11,7 +11,7 @@ See our example project
 */
 var express = require('express');
 var bodyParser = require('body-parser');
-var Parse = require('parse/node').Parse;
+var Parse = global.Parse || require('parse/node').Parse;
 var Request = require('request');
 
 var Routes = {
@@ -33,8 +33,13 @@ function validateWebhookRequest(req, res, next) {
 
 // Middleware to inflate a Parse.Object passed to a webhook route
 function inflateParseObject(req, res, next) {
-  var object = req.body.object;
-  req.object = Parse.Object.fromJSON(object);
+  if (req.body.original && req.body.update) {
+    var object = Parse.Object.fromJSON(req.body.original);
+    object.set(Parse._decode(undefined, req.body.update));
+    req.object = object;
+  } else {
+    req.object = Parse.Object.fromJSON(req.body.object);
+  }
   next();
 }
 
@@ -62,6 +67,12 @@ function encodeSuccessResponseObject(req, res, next) {
 // Middleware to promote the cloud function params to the request object
 function updateRequestFunctionParams(req, res, next) {
   req.params = req.body.params;
+  next();
+}
+
+// Middleware to promote the installationId to the request object
+function updateRequestInstallationId(req, res, next) {
+  req.installationId = req.body.installationId;
   next();
 }
 
@@ -110,6 +121,7 @@ app.use(jsonParser);
 var beforeSave = function(className, handler) {
   app.post('/beforeSave_' + className,
       entryLogger(className, 'beforeSave'),
+      updateRequestInstallationId,
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
@@ -128,6 +140,7 @@ var beforeSave = function(className, handler) {
 var afterSave = function(className, handler) {
   app.post('/afterSave_' + className,
       entryLogger(className, 'afterSave'),
+      updateRequestInstallationId,
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
@@ -139,6 +152,7 @@ var afterSave = function(className, handler) {
 var beforeDelete = function(className, handler) {
   app.post('/beforeDelete_' + className,
       entryLogger(className, 'beforeDelete'),
+      updateRequestInstallationId,
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
@@ -149,6 +163,7 @@ var beforeDelete = function(className, handler) {
 var afterDelete = function(className, handler) {
   app.post('/afterDelete_' + className,
       entryLogger(className, 'afterDelete'),
+      updateRequestInstallationId,
       addParseResponseMethods,
       inflateParseObject,
       inflateParseUser,
@@ -160,6 +175,7 @@ var afterDelete = function(className, handler) {
 var define = function(functionName, handler) {
   app.post('/function_' + functionName,
       entryLogger(functionName, 'function'),
+      updateRequestInstallationId,
       updateRequestFunctionParams,
       addParseResponseMethods,
       encodeSuccessResponseObject,

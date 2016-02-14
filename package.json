@@ -1,6 +1,6 @@
 {
   "name": "parse-cloud-express",
-  "version": "1.0.6",
+  "version": "1.1.1",
   "description": "Express middleware and utilities for Parse.com Cloud Code functionality in Node.js",
   "main": "index.js",
   "repository": {
@@ -16,7 +16,7 @@
     "express": "~4.9",
     "body-parser": "~1.12",
     "request": "~2.61",
-    "parse": "~1.6"
+    "parse": "~1.7"
   },
   "author": "Fosco Marotto <thedude@fb.com>",
   "license": "MIT",
