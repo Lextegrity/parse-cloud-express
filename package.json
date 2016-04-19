@@ -16,7 +16,7 @@
     "express": "~4.9",
     "body-parser": "~1.12",
     "request": "~2.61",
-    "parse": "~1.7"
+    "parse": "~1.8"
   },
   "author": "Fosco Marotto <thedude@fb.com>",
   "license": "MIT",
