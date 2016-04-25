@@ -19,7 +19,7 @@
   },
   "peerDependencies": {
     "parse": "1.x"
-  }
+  },
   "author": "Fosco Marotto <thedude@fb.com>",
   "license": "MIT",
   "bugs": {
