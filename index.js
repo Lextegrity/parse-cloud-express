@@ -180,7 +180,15 @@ var define = function(functionName, handler) {
       addParseResponseMethods,
       encodeSuccessResponseObject,
       inflateParseUser,
-      handler);
+      (req, res) => {
+        handler(req)
+        .then((response) => {
+          res.success(response);
+        })
+        .catch((error) => {
+          res.error(error);
+        })
+      });
   Routes['function'].push(functionName);
 };
 
